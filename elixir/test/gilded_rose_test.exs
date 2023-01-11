@@ -27,6 +27,60 @@ defmodule GildedRoseTest do
     end
   end
 
+  describe "Aged Brie" do
+    test "quality increases" do
+      item = aged_brie(quality: 30)
+      next_item = GildedRose.update_item(item)
+      assert next_item.quality == 31
+    end
+
+    test "quality increases by two after sell date" do
+      item = aged_brie(sell_in: -5, quality: 30)
+      next_item = GildedRose.update_item(item)
+      assert next_item.quality == 32
+    end
+  end
+
+  describe "Sulfuras" do
+    test "quality is always 80" do
+      item = sulfuras()
+      next_item = GildedRose.update_item(item)
+      assert next_item.quality == 80
+    end
+
+    test "sell date never changes" do
+      item = sulfuras(sell_in: 10)
+      next_item = GildedRose.update_item(item)
+      assert next_item.sell_in == 10
+    end
+  end
+
+  describe "Backstage Passes" do
+    test "quality increases" do
+      item = backstage_passes(sell_in: 15, quality: 30)
+      next_item = GildedRose.update_item(item)
+      assert next_item.quality == 31
+    end
+
+    test "quality increases by 2 when 10 days or less" do
+      item = backstage_passes(sell_in: 10, quality: 30)
+      next_item = GildedRose.update_item(item)
+      assert next_item.quality == 32
+    end
+
+    test "quality increases by 3 when 5 days or less" do
+      item = backstage_passes(sell_in: 5, quality: 30)
+      next_item = GildedRose.update_item(item)
+      assert next_item.quality == 33
+    end
+
+    test "quality is 0 when expired" do
+      item = backstage_passes(sell_in: 0, quality: 30)
+      next_item = GildedRose.update_item(item)
+      assert next_item.quality == 0
+    end
+  end
+
   defp common_item(options) do
     %Item{
       name: Keyword.get(options, :name, "Common Item"),
@@ -37,5 +91,16 @@ defmodule GildedRoseTest do
 
   defp aged_brie(options) do
     common_item(Keyword.put(options, :name, "Aged Brie"))
+  end
+
+  defp sulfuras(options \\ []) do
+    options
+    |> Keyword.put(:name, "Sulfuras, Hand of Ragnaros")
+    |> Keyword.put(:quality, 80)
+    |> common_item()
+  end
+
+  defp backstage_passes(options) do
+    common_item(Keyword.put(options, :name, "Backstage passes to a TAFKAL80ETC concert"))
   end
 end
