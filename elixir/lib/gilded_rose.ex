@@ -9,11 +9,11 @@ defmodule GildedRose do
   end
 
   def update_item(%Item{name: "Aged Brie", sell_in: sell_in} = item) when sell_in <= 0 do
-    %Item{item | sell_in: sell_in - 1, quality: min(item.quality + 2, 50)}
+    age_item_and_improve_quality(item, 2)
   end
 
   def update_item(%Item{name: "Aged Brie", sell_in: sell_in} = item) do
-    %Item{item | sell_in: sell_in - 1, quality: min(item.quality + 1, 50)}
+    age_item_and_improve_quality(item, 1)
   end
 
   def update_item(%Item{name: "Sulfuras, Hand of Ragnaros"} = item) do
@@ -25,22 +25,40 @@ defmodule GildedRose do
   end
 
   def update_item(%Item{name: @backstage, sell_in: sell_in} = item) when sell_in <= 5 do
-    %Item{item | sell_in: sell_in - 1, quality: min(item.quality + 3, 50)}
+    age_item_and_improve_quality(item, 3)
   end
 
   def update_item(%Item{name: @backstage, sell_in: sell_in} = item) when sell_in <= 10 do
-    %Item{item | sell_in: sell_in - 1, quality: min(item.quality + 2, 50)}
+    age_item_and_improve_quality(item, 2)
   end
 
   def update_item(%Item{name: @backstage, sell_in: sell_in} = item) do
-    %Item{item | sell_in: sell_in - 1, quality: min(item.quality + 1, 50)}
+    age_item_and_improve_quality(item, 1)
   end
 
   def update_item(%Item{sell_in: sell_in} = item) when sell_in <= 0 do
-    %Item{item | sell_in: sell_in - 1, quality: max(item.quality - 2, 0)}
+    age_item_and_degrade_quality(item, 2)
   end
 
   def update_item(%Item{} = item) do
-    %Item{item | sell_in: item.sell_in - 1, quality: max(item.quality - 1, 0)}
+    age_item_and_degrade_quality(item, 1)
+  end
+
+    defp age_item_and_degrade_quality(%Item{} = item, rate) do
+      item = %Item{item | sell_in: item.sell_in - 1}
+      degrade_quality(item, rate)
+    end
+
+    defp degrade_quality(%Item{} = item, rate) do
+      %Item{item | quality: max(item.quality - rate, 0)}
+    end
+
+    defp age_item_and_improve_quality(%Item{} = item, rate) do
+      item = %Item{item | sell_in: item.sell_in - 1}
+      improve_quality(item, rate)
+    end
+
+    defp improve_quality(%Item{} = item, rate) do
+      %Item{item | quality: min(item.quality + rate, 50)}
   end
 end
