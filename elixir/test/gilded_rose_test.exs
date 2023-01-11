@@ -81,6 +81,20 @@ defmodule GildedRoseTest do
     end
   end
 
+  describe "Conjured item" do
+    test "quality degrades by two" do
+      item = conjured(quality: 20)
+      next_item = GildedRose.update_item(item)
+      assert next_item.quality == 18
+    end
+
+    test "quality degrades by four after sell by date" do
+      item = conjured(sell_in: -5, quality: 20)
+      next_item = GildedRose.update_item(item)
+      assert next_item.quality == 16
+    end
+  end
+
   defp common_item(options) do
     %Item{
       name: Keyword.get(options, :name, "Common Item"),
@@ -102,5 +116,9 @@ defmodule GildedRoseTest do
 
   defp backstage_passes(options) do
     common_item(Keyword.put(options, :name, "Backstage passes to a TAFKAL80ETC concert"))
+  end
+
+  defp conjured(options) do
+    common_item(Keyword.put(options, :name, "Conjured Item"))
   end
 end
