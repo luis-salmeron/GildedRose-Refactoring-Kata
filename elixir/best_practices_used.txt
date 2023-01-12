@@ -1,0 +1,10 @@
+List of best practices used while refactoring Gilded Rose in Elixir
+-Implemented function heads over guards
+-Avoided deep nesting
+-Used pattern matching instead of a bunch of loops
+-Used the pipeline operator
+-Implemented Helper Functions
+-Defined private functions for local invocation
+-Used optional default in function arguments
+-Used the @ symbol to define constant variable
+-Used meaningful naming conventions
