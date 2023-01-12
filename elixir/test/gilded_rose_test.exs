@@ -89,7 +89,7 @@ defmodule GildedRoseTest do
     end
 
     test "quality degrades by four after sell by date" do
-      item = conjured(sell_in: -1, quality: 20)
+      item = conjured(sell_in: -5, quality: 20)
       next_item = GildedRose.update_item(item)
       assert next_item.quality == 16
     end
