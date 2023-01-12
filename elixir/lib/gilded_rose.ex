@@ -40,6 +40,14 @@ defmodule GildedRose do
     age_item_and_degrade_quality(item, 2)
   end
 
+  def update_item(%Item{name: "Conjured Item", sell_in: sell_in} = item) when sell_in <= 0 do
+    age_item_and_degrade_quality(item, 4)
+  end
+
+  def update_item(%Item{name: "Conjured Item"} = item) do
+    age_item_and_degrade_quality(item, 2)
+  end
+
   def update_item(%Item{} = item) do
     age_item_and_degrade_quality(item, 1)
   end
